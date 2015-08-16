@@ -10,6 +10,10 @@ var source = {
   labels: fs.readFileSync(
     path.join(__dirname, './labels.rasm'),
     { encoding: 'utf8' }
+  ),
+  rpm: fs.readFileSync(
+    path.join(__dirname, './rpm.rasm'),
+    { encoding: 'utf8' }
   )
 }
 
@@ -68,6 +72,44 @@ describe('rasm-asm', function () {
   })
 
   it('can assemble programs with labels', function () {
-    assert.deepEqual(assemble(source.labels), [ 113, 10, 117, 96, 33, 0, 96, 16, 131, 1, 224, 0, 224, 1, 49, 4, 0, 0 ])
+    assert.deepEqual(
+      assemble(source.labels),
+      [
+        0x71, 0x0a,
+        0x75, 0x60,
+        0x21, 0x00,
+        0x60, 0x10,
+        0x83, 0x01,
+        0xe0, 0x00,
+        0xe0, 0x01,
+        0x31, 0x04,
+        0x00, 0x00
+      ]
+    )
+  })
+
+  it('can assemble the russian peasant algorithm', function () {
+    assert.deepEqual(
+      assemble(source.rpm),
+      [
+        0x31, 0x1a,
+        0x79, 0x00,
+        0x21, 0x00,
+        0x60, 0x18,
+        0x7c, 0x00,
+        0xbd, 0x01,
+        0x2d, 0x01,
+        0x61, 0x12,
+        0x98, 0x01,
+        0xe4, 0x00,
+        0xe3, 0x01,
+        0x31, 0x04,
+        0x50, 0x00,
+        0x71, 0x06,
+        0x75, 0x07,
+        0x41, 0x02,
+        0x00, 0x00
+      ]
+    )
   })
 })
