@@ -1,0 +1,11 @@
+  ld r0 #0a
+  ld r1 #60
+loop:
+  cmp r0 #00
+  jz exit
+  st r0 @r1
+  inc r0
+  inc r1
+  jmp loop
+exit:
+  halt

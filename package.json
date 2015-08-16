@@ -1,0 +1,28 @@
+{
+  "name": "rasm-asm",
+  "version": "0.0.1",
+  "description": "assembler for reg4in's assembly",
+  "main": "src/assembler.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reg4in/rasm-asm.git"
+  },
+  "keywords": [
+    "rasm",
+    "asm",
+    "assembler",
+    "8-bit"
+  ],
+  "author": "reg4in",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/reg4in/rasm-asm/issues"
+  },
+  "homepage": "https://github.com/reg4in/rasm-asm#readme",
+  "devDependencies": {
+    "mocha": "^2.2.5"
+  }
+}

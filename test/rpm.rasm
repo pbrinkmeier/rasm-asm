@@ -1,0 +1,22 @@
+  jmp start
+rpm:
+  ld r2 #00
+rpm.loop:
+  cmp r0 #00
+  jz rpm.ret
+  ld r3 r0
+  and r3 #01
+  cmp r3 #01
+  jnz rpm.shifts
+  add r2 r1
+rpm.shifts:
+  asr r0
+  asl r1
+  jmp rpm.loop
+rpm.ret:
+  ret
+start:
+  ld r0 #06
+  ld r1 #07
+  call rpm
+  halt
