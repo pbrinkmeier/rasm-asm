@@ -18,6 +18,15 @@ var source = {
 }
 
 describe('rasm-asm', function () {
+  it('throws an error if an unknown instruction is given', function () {
+    assert.throws(
+      function () {
+        assemble('mrltbrnft #2a')
+      },
+      /Unknown instruction: mrltbrnft/
+    )
+  })
+
   it('can assemble the right codes', function () {
     assert.deepEqual(assemble('halt'), [0x00, 0x00])
 
@@ -100,6 +109,24 @@ describe('rasm-asm', function () {
         0x64,
         0x21
       ]
+    )
+  })
+
+  it('throws an error if an instruction is given the wrong number of parameters', function () {
+    assert.throws(
+      function () {
+        assemble('int #2a @2b r0')
+      },
+      /Wrong number of parameters for int \(3 instead of 1\)/
+    )
+  })
+
+  it('throws an error if a parameter has an invalid type', function () {
+    assert.throws(
+      function () {
+        assemble('add #20 #0a')
+      },
+      /Illegal type for parameter 1 of add \(must be one of: register\)/
     )
   })
 
