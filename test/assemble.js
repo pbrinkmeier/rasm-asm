@@ -71,6 +71,38 @@ describe('rasm-asm', function () {
 
   })
 
+  it('can assemble number constants into the code', function () {
+    assert.deepEqual(
+      assemble('.num #00\n.num #2a\n.num #42\n'),
+      [
+        0x00,
+        0x2a,
+        0x42
+      ]
+    )
+  })
+
+  it('can assemble string constants into the code', function () {
+    assert.deepEqual(
+      assemble('.str Hello, World!'),
+      [
+        0x48,
+        0x65,
+        0x6c,
+        0x6c,
+        0x6f,
+        0x2c,
+        0x20,
+        0x57,
+        0x6f,
+        0x72,
+        0x6c,
+        0x64,
+        0x21
+      ]
+    )
+  })
+
   it('can assemble programs with labels', function () {
     assert.deepEqual(
       assemble(source.labels),
