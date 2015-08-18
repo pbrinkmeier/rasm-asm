@@ -18,6 +18,15 @@ var source = {
 }
 
 describe('rasm-asm', function () {
+  it('throws an error if an unknown instruction is given', function () {
+    assert.throws(
+      function () {
+        assemble('mrltbrnft #2a')
+      },
+      /Unknown instruction: mrltbrnft/
+    )
+  })
+
   it('can assemble the right codes', function () {
     assert.deepEqual(assemble('halt'), [0x00, 0x00])
 
