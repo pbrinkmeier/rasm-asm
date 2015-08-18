@@ -47,51 +47,72 @@ module.exports = function assemble (raw) {
       firstByte = 0x00
       secondByte = 0x00
 
-      if (!mappings.hasOwnProperty(instruction)) {
-        throw new Error('Unknown instruction: ' + instruction)
-      }
+      switch (instruction) {
+        case '.num':
+          code.push(operandValue(operands[0]))
 
-      if (operands.length !== mappings[instruction].params.length) {
-        throw new Error('Wrong number of parameters for ' + instruction + ' (' + String(operands.length) + ' instead of ' + String(mappings[instruction].params.length) + ')')
-      }
-
-      firstByte |= mappings[instruction].base
-
-      operands.forEach(function (operand, index) {
-        var opSpec = mappings[instruction].params[index]
-        var type = operandType(operand)
-        var typeNumber = modes[type]
-        var value
-
-        if (type === 'label') {
-          replacements.push({
-            address: code.length + 1,
-            with: operand
+          break
+        case '.str':
+          operands
+          .join(' ')
+          .split('')
+          .forEach(function (character) {
+            code.push(character.charCodeAt(0))
           })
-        } else {
-          value = operandValue(operand)
 
-          if (opSpec.types.indexOf(type) === -1) {
-            throw new Error('Illegal type for parameter ' + String(index + 1) + ' of ' + instruction + ' (must be one of: ' + opSpec.types.join(', ') + ')')
+          break
+        default:
+          if (!mappings.hasOwnProperty(instruction)) {
+            throw new Error('Unknown instruction: ' + instruction)
           }
 
-          if (opSpec.typeTo !== null) {
-            if (opSpec.typeTo[0] > 7) {
-              firstByte |= (typeNumber << (opSpec.typeTo[0] % 8))
+          if (operands.length !== mappings[instruction].params.length) {
+            throw new Error('Wrong number of parameters for ' + instruction + ' (' + String(operands.length) + ' instead of ' + String(mappings[instruction].params.length) + ')')
+          }
+
+          firstByte |= mappings[instruction].base
+
+          operands.forEach(function (operand, index) {
+            var opSpec = mappings[instruction].params[index]
+            var type = operandType(operand)
+            var typeNumber
+            var value
+
+            if (type === 'label') {
+              replacements.push({
+                address: code.length + 1,
+                with: operand
+              })
+
+              typeNumber = modes.constant
             } else {
-              secondByte |= (typeNumber << (opSpec.typeTo[0]))
+              value = operandValue(operand)
+              typeNumber = modes[type]
+
+              if (opSpec.types.indexOf(type) === -1) {
+                throw new Error('Illegal type for parameter ' + String(index + 1) + ' of ' + instruction + ' (must be one of: ' + opSpec.types.join(', ') + ')')
+              }
+
+              if (opSpec.valueTo[0] > 7) {
+                firstByte |= (value << (opSpec.valueTo[0] % 8))
+              } else {
+                secondByte |= (value << (opSpec.valueTo[0]))
+              }
             }
-          }
 
-          if (opSpec.valueTo[0] > 7) {
-            firstByte |= (value << (opSpec.valueTo[0] % 8))
-          } else {
-            secondByte |= (value << (opSpec.valueTo[0]))
-          }
-        }
-      })
+            if (opSpec.typeTo !== null) {
+              if (opSpec.typeTo[0] > 7) {
+                firstByte |= (typeNumber << (opSpec.typeTo[0] % 8))
+              } else {
+                secondByte |= (typeNumber << (opSpec.typeTo[0]))
+              }
+            }
+          })
 
-      code.push(firstByte, secondByte)
+          code.push(firstByte, secondByte)
+
+          break
+      }
     }
   })
 

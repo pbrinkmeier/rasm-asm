@@ -14,6 +14,10 @@ var source = {
   rpm: fs.readFileSync(
     path.join(__dirname, './rpm.rasm'),
     { encoding: 'utf8' }
+  ),
+  hello: fs.readFileSync(
+    path.join(__dirname, './hello.rasm'),
+    { encoding: 'utf8' }
   )
 }
 
@@ -80,6 +84,38 @@ describe('rasm-asm', function () {
 
   })
 
+  it('can assemble number constants into the code', function () {
+    assert.deepEqual(
+      assemble('.num #00\n.num #2a\n.num #42\n'),
+      [
+        0x00,
+        0x2a,
+        0x42
+      ]
+    )
+  })
+
+  it('can assemble string constants into the code', function () {
+    assert.deepEqual(
+      assemble('.str Hello, World!'),
+      [
+        0x48,
+        0x65,
+        0x6c,
+        0x6c,
+        0x6f,
+        0x2c,
+        0x20,
+        0x57,
+        0x6f,
+        0x72,
+        0x6c,
+        0x64,
+        0x21
+      ]
+    )
+  })
+
   it('throws an error if an instruction is given the wrong number of parameters', function () {
     assert.throws(
       function () {
@@ -135,6 +171,27 @@ describe('rasm-asm', function () {
         0x71, 0x06,
         0x75, 0x07,
         0x41, 0x02,
+        0x00, 0x00
+      ]
+    )
+  })
+
+  it('can assemble programs with constants', function () {
+    assert.deepEqual(
+      assemble(source.hello),
+      [
+        0x31, 0x10,
+        0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x20, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21,
+        0x00,
+        0x71, 0x02,
+        0x75, 0xe0,
+        0x7b, 0x00,
+        0x29, 0x00,
+        0x60, 0x22,
+        0x8b, 0x01,
+        0xe0, 0x00,
+        0xe0, 0x01,
+        0x31, 0x14,
         0x00, 0x00
       ]
     )
