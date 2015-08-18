@@ -47,6 +47,10 @@ module.exports = function assemble (raw) {
       firstByte = 0x00
       secondByte = 0x00
 
+      if (!mappings.hasOwnProperty(instruction)) {
+        throw new Error('Unknown instruction: ' + instruction)
+      }
+
       if (operands.length !== mappings[instruction].params.length) {
         throw new Error('Wrong number of parameters for ' + instruction + ' (' + String(operands.length) + ' instead of ' + String(mappings[instruction].params.length) + ')')
       }
