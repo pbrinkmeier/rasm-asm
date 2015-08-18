@@ -75,7 +75,7 @@ module.exports = function assemble (raw) {
           operands.forEach(function (operand, index) {
             var opSpec = mappings[instruction].params[index]
             var type = operandType(operand)
-            var typeNumber = modes[type]
+            var typeNumber
             var value
 
             if (type === 'label') {
@@ -83,25 +83,28 @@ module.exports = function assemble (raw) {
                 address: code.length + 1,
                 with: operand
               })
+
+              typeNumber = modes.constant
             } else {
               value = operandValue(operand)
+              typeNumber = modes[type]
 
               if (opSpec.types.indexOf(type) === -1) {
                 throw new Error('Illegal type for parameter ' + String(index + 1) + ' of ' + instruction + ' (must be one of: ' + opSpec.types.join(', ') + ')')
-              }
-
-              if (opSpec.typeTo !== null) {
-                if (opSpec.typeTo[0] > 7) {
-                  firstByte |= (typeNumber << (opSpec.typeTo[0] % 8))
-                } else {
-                  secondByte |= (typeNumber << (opSpec.typeTo[0]))
-                }
               }
 
               if (opSpec.valueTo[0] > 7) {
                 firstByte |= (value << (opSpec.valueTo[0] % 8))
               } else {
                 secondByte |= (value << (opSpec.valueTo[0]))
+              }
+            }
+
+            if (opSpec.typeTo !== null) {
+              if (opSpec.typeTo[0] > 7) {
+                firstByte |= (typeNumber << (opSpec.typeTo[0] % 8))
+              } else {
+                secondByte |= (typeNumber << (opSpec.typeTo[0]))
               }
             }
           })

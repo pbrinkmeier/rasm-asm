@@ -1,0 +1,19 @@
+  jmp start
+hello:
+  .str Hello, World!
+  .num #00
+start:
+  ld r0 hello
+  ld r1 #e0
+loop:
+  ld r2 @r0
+  cmp r2 #00
+  jz end
+
+  st r2 @r1
+  inc r0
+  inc r1
+
+  jmp loop
+end:
+  halt
