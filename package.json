@@ -2,7 +2,7 @@
   "name": "rasm-asm",
   "version": "0.1.0",
   "description": "assembler for reg4in's assembly",
-  "main": "src/assembler.js",
+  "main": "./src/assemble.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha"
   },
