@@ -8,15 +8,15 @@ var assemble = require('../src/assemble.js')
 
 var source = {
   labels: fs.readFileSync(
-    path.join(__dirname, './labels.rasm'),
+    path.join(__dirname, '../examples/labels.rasm'),
     { encoding: 'utf8' }
   ),
   rpm: fs.readFileSync(
-    path.join(__dirname, './rpm.rasm'),
+    path.join(__dirname, '../examples/rpm.rasm'),
     { encoding: 'utf8' }
   ),
   hello: fs.readFileSync(
-    path.join(__dirname, './hello.rasm'),
+    path.join(__dirname, '../examples/hello.rasm'),
     { encoding: 'utf8' }
   )
 }
