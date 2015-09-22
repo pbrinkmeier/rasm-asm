@@ -14,13 +14,9 @@ var modes = {
 module.exports = function assemble (raw) {
   var lines = raw
     .split('\n')
-    // remove comments
-    .filter(function (line) {
-      return line[0] !== ';'
-    })
-    // trim whitespace
+    // remove comments and whitespace
     .map(function (line) {
-      return line.trim()
+      return line.split(';')[0].trim()
     })
     // remove empty lines
     .filter(function (line) {
