@@ -1,7 +1,8 @@
   jmp start
-hello:
+hello: ; The string "Hello World!" (nullchar-delimited) is stored at this label.
   .str Hello, World!
   .num #00
+; This is where the program actually starts.
 start:
   ld r0 hello
   ld r1 #e0
@@ -10,6 +11,7 @@ loop:
   cmp r2 #00
   jz end
 
+  ; This is the thing we wanna do. A lot of times.
   st r2 @r1
   inc r0
   inc r1
