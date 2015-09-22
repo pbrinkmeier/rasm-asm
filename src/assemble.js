@@ -1,5 +1,6 @@
 'use strict'
 
+var errorAtLine = require('./error-at-line.js')
 var mappings = require('./mappings.js')
 var operandType = require('./operand-type.js')
 var operandValue = require('./operand-value.js')
@@ -14,13 +15,18 @@ var modes = {
 module.exports = function assemble (raw) {
   var lines = raw
     .split('\n')
-    // remove comments and whitespace
-    .map(function (line) {
-      return line.split(';')[0].trim()
+    // remove comments
+    // remove white space
+    // add line numbers
+    .map(function (line, lineNumber) {
+      return {
+        text: line.split(';')[0].trim(),
+        number: lineNumber
+      }
     })
     // remove empty lines
     .filter(function (line) {
-      return line !== ''
+      return line.text !== ''
     })
 
   var code = []
@@ -28,16 +34,17 @@ module.exports = function assemble (raw) {
   var replacements = []
 
   lines.forEach(function (line) {
+    var text = line.text
     var _split
     var instruction
     var operands
     var firstByte
     var secondByte
 
-    if (line[line.length - 1] === ':') {
-      labels[line.slice(0, -1)] = code.length
+    if (text[text.length - 1] === ':') {
+      labels[text.slice(0, -1)] = code.length
     } else {
-      _split = line.split(' ')
+      _split = text.split(' ')
       instruction = _split[0]
       operands = _split.slice(1)
       firstByte = 0x00
@@ -59,7 +66,7 @@ module.exports = function assemble (raw) {
           break
         default:
           if (!mappings.hasOwnProperty(instruction)) {
-            throw new Error('Unknown instruction: ' + instruction)
+            throw new Error('Unknown instruction: ' + instruction + errorAtLine(line))
           }
 
           if (operands.length !== mappings[instruction].params.length) {
