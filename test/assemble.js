@@ -27,7 +27,7 @@ describe('rasm-asm', function () {
       function () {
         assemble('mrltbrnft #2a')
       },
-      /Unknown instruction: mrltbrnft/
+      "Unknown instruction: mrltbrnft\nAt line 1: 'mrtlbrnft #2a'"
     )
   })
 
@@ -121,7 +121,7 @@ describe('rasm-asm', function () {
       function () {
         assemble('int #2a @2b r0')
       },
-      /Wrong number of parameters for int \(3 instead of 1\)/
+      "Wrong number of parameters for int (3 instead of 1)\nAt line 1: 'int #2a @2b r0'"
     )
   })
 
@@ -130,7 +130,7 @@ describe('rasm-asm', function () {
       function () {
         assemble('add #20 #0a')
       },
-      /Illegal type for parameter 1 of add \(must be one of: register\)/
+      "Illegal type for parameter 1 of add (must be one of: register)\nAt line 1: 'add #20 #0a'"
     )
   })
 

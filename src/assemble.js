@@ -1,5 +1,6 @@
 'use strict'
 
+var errorAtLine = require('./error-at-line.js')
 var mappings = require('./mappings.js')
 var operandType = require('./operand-type.js')
 var operandValue = require('./operand-value.js')
@@ -65,7 +66,7 @@ module.exports = function assemble (raw) {
           break
         default:
           if (!mappings.hasOwnProperty(instruction)) {
-            throw new Error('Unknown instruction: ' + instruction)
+            throw new Error('Unknown instruction: ' + instruction + errorAtLine(line))
           }
 
           if (operands.length !== mappings[instruction].params.length) {
