@@ -14,13 +14,18 @@ var modes = {
 module.exports = function assemble (raw) {
   var lines = raw
     .split('\n')
-    // remove comments and whitespace
-    .map(function (line) {
-      return line.split(';')[0].trim()
+    // remove comments
+    // remove white space
+    // add line numbers
+    .map(function (line, lineNumber) {
+      return {
+        text: line.split(';')[0].trim(),
+        number: lineNumber
+      }
     })
     // remove empty lines
     .filter(function (line) {
-      return line !== ''
+      return line.text !== ''
     })
 
   var code = []
@@ -28,16 +33,17 @@ module.exports = function assemble (raw) {
   var replacements = []
 
   lines.forEach(function (line) {
+    var text = line.text
     var _split
     var instruction
     var operands
     var firstByte
     var secondByte
 
-    if (line[line.length - 1] === ':') {
-      labels[line.slice(0, -1)] = code.length
+    if (text[text.length - 1] === ':') {
+      labels[text.slice(0, -1)] = code.length
     } else {
-      _split = line.split(' ')
+      _split = text.split(' ')
       instruction = _split[0]
       operands = _split.slice(1)
       firstByte = 0x00
